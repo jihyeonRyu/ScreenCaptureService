@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">AccessibilityService</string>
+    <string name="accessibility_description">접근성 서비스</string>
+</resources>
