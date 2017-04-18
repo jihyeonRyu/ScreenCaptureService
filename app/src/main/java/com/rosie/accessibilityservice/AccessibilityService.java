@@ -16,9 +16,13 @@ public class AccessibilityService extends android.accessibilityservice.Accessibi
 
     final static String TAG = "AccessibilityService";
 
+    ScreenShot screenShot;
+
     private List<AccessibilityNodeInfo> nodesList = new ArrayList<>();
 
     long curTime, lastTime;
+
+    int numLines;
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
@@ -31,6 +35,8 @@ public class AccessibilityService extends android.accessibilityservice.Accessibi
                 (curTime - lastTime > 10000 && event.getEventType() != AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED)) {
             nodesList.clear();
             getNodeInfoes(getRootInActiveWindow(), 0);
+            screenShot = new ScreenShot(this);
+            screenShot.capture();
         }
 
         lastTime = System.currentTimeMillis();
@@ -92,6 +98,8 @@ public class AccessibilityService extends android.accessibilityservice.Accessibi
             sb.append(" [Maybe icon: " + icon.width() + ", " + icon.height());
 
         Log.d(TAG, sb.toString());
+
+
 
         for (int i = 0; i < node.getChildCount(); i++) {
             AccessibilityNodeInfo child = node.getChild(i);

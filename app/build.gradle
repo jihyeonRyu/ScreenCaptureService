@@ -9,22 +9,47 @@ android {
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        testInstrumentationRunner "com.google.android.apps.common.testing.testrunner.GoogleInstrumentationTestRunner"
+
     }
+
+
+    sourceSets {
+        // Espresso instrumentation tests
+        androidTest.setRoot('src/instrumentTest')
+    }
+
+    signingConfigs {
+        humax_h5 {
+            storeFile file(HUMAX_H5_STORE_FILE)
+            storePassword HUMAX_H5_STORE_PASSWORD
+            keyAlias HUMAX_H5_KEY_ALIAS
+            keyPassword HUMAX_H5_KEY_PASSWORD
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        h5 {
+            debuggable true
+            signingConfig signingConfigs.humax_h5
+        }
     }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support.test:runner:0.5'
+    // Set this dependency to build and run UI Automator tests
+    compile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.2'
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.3.0'
+    compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
 }
