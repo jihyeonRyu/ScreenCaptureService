@@ -5,6 +5,7 @@ package com.rosie.accessibilityservice;
  */
 
 import android.accessibilityservice.AccessibilityServiceInfo;
+import android.content.Intent;
 import android.graphics.Rect;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
@@ -16,13 +17,11 @@ public class AccessibilityService extends android.accessibilityservice.Accessibi
 
     final static String TAG = "AccessibilityService";
 
-    ScreenShot screenShot;
-
     private List<AccessibilityNodeInfo> nodesList = new ArrayList<>();
 
     long curTime, lastTime;
 
-    int numLines;
+    int lineCount;
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
@@ -32,11 +31,11 @@ public class AccessibilityService extends android.accessibilityservice.Accessibi
         curTime = System.currentTimeMillis();
 
         if (nodesList.isEmpty() ||
-                (curTime - lastTime > 10000 && event.getEventType() != AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED)) {
+                (curTime - lastTime > 100000 && event.getEventType() != AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED)) {
             nodesList.clear();
+            lineCount = 0;
             getNodeInfoes(getRootInActiveWindow(), 0);
-            screenShot = new ScreenShot(this);
-            screenShot.capture();
+
         }
 
         lastTime = System.currentTimeMillis();
@@ -64,6 +63,9 @@ public class AccessibilityService extends android.accessibilityservice.Accessibi
     }
 
     void getNodeInfoes(AccessibilityNodeInfo node, int tab) {
+
+        if(lineCount > 50)
+            return;
 
         if (node == null)
             return;
@@ -99,11 +101,14 @@ public class AccessibilityService extends android.accessibilityservice.Accessibi
 
         Log.d(TAG, sb.toString());
 
-
+        lineCount ++;
 
         for (int i = 0; i < node.getChildCount(); i++) {
             AccessibilityNodeInfo child = node.getChild(i);
             getNodeInfoes(child, tab + 1);
+            if(lineCount > 50 )
+                return;
         }
     }
+
 }
