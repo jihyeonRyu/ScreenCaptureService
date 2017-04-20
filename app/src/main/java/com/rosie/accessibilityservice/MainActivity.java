@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+
 import android.graphics.PixelFormat;
 import android.hardware.display.DisplayManager;
 import android.hardware.display.VirtualDisplay;
@@ -24,9 +25,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Display;
-import android.view.OrientationEventListener;
-import android.view.SurfaceView;
+
 import android.view.accessibility.AccessibilityManager;
 import android.widget.Toast;
 
@@ -42,16 +41,12 @@ public class MainActivity extends AppCompatActivity {
     final static String TAG ="Main Activity";
 
     static final int PERMISSION_CODE = 1;
-    private static final int VIRTUAL_DISPLAY_FLAGS =
-            DisplayManager.VIRTUAL_DISPLAY_FLAG_OWN_CONTENT_ONLY
-            | DisplayManager.VIRTUAL_DISPLAY_FLAG_PUBLIC;
+    private static final int VIRTUAL_DISPLAY_FLAGS = DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR;
 
     private MediaProjectionManager mProjectionManager;
     private MediaProjection mMediaProjection;
 
     private Handler mHandler;
-
-    private Display mDisplay;
     private VirtualDisplay mVirtualDisplay;
     private int mDensity;
     private int mWidth;
@@ -60,6 +55,9 @@ public class MainActivity extends AppCompatActivity {
     private ImageReader mImageReader;
     private static int IMAGES_PRODUCED = 0;
     private static String STORE_DIRECTORY;
+
+    Image beforeimage = null;
+    static final long TIME_OUT = 3000;
 
     ////////////////////////////////// activity override 함수 /////////////////////////////////
     @Override
@@ -110,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
         mMediaProjection = mProjectionManager.getMediaProjection(resultCode, data);
         // create directory to save screenshot
         createDirectory();
-        // create virtual display depending on device width / height
+        // create virtual display for screen capture
         createVirtualDisplay();
         // register media projection stop callback
         mMediaProjection.registerCallback(new MediaProjectionStopCallback(), mHandler);
@@ -124,9 +122,11 @@ public class MainActivity extends AppCompatActivity {
         mWidth = metrics.widthPixels;
         mHeight = metrics.heightPixels;
 
-        // start capture reader
-        mImageReader = ImageReader.newInstance(mWidth, mHeight, PixelFormat.RGBA_8888, 2);
+        // requesting frame buffers
+        mImageReader = ImageReader.newInstance(mWidth, mHeight, PixelFormat.RGBA_8888, 2); // latest and next buffers
+        // image data is rendered into imageReader surface
         mVirtualDisplay = mMediaProjection.createVirtualDisplay("DEMO", mWidth, mHeight, mDensity, VIRTUAL_DISPLAY_FLAGS, mImageReader.getSurface(), null, mHandler);
+        // when a new image becomes available
         mImageReader.setOnImageAvailableListener(new ImageAvailableListener(), mHandler);
 
         Log.d(TAG, "create virtual display");
@@ -175,14 +175,21 @@ public class MainActivity extends AppCompatActivity {
     private class ImageAvailableListener implements ImageReader.OnImageAvailableListener {
         @Override
         public void onImageAvailable(ImageReader reader) {
-            Image image = null;
+            Image limage = null;
             FileOutputStream fos = null;
             Bitmap bitmap = null;
 
             try {
-                image = mImageReader.acquireLatestImage();
-                if (image != null) {
-                    Image.Plane[] planes = image.getPlanes();
+                limage = mImageReader.acquireLatestImage();
+
+                if (limage != null) {
+
+                    if(beforeimage != null && beforeimage.equals(limage) && (limage.getTimestamp() - beforeimage.getTimestamp()) <= TIME_OUT )
+                        return;
+
+                    beforeimage = limage;
+
+                    Image.Plane[] planes = limage.getPlanes();
                     ByteBuffer buffer = planes[0].getBuffer();
                     int pixelStride = planes[0].getPixelStride();
                     int rowStride = planes[0].getRowStride();
@@ -215,14 +222,14 @@ public class MainActivity extends AppCompatActivity {
                     bitmap.recycle();
                 }
 
-                if (image != null) {
-                    image.close();
+                if (limage != null) {
+                    limage.close();
                 }
             }
         }
     }
 
-    /////////////////////////////////// media projection stop 시 호출 /////////////////////
+    /////////////////////////////////// media projection stop 시 호출 /////////////////////////
 
     private class MediaProjectionStopCallback extends MediaProjection.Callback {
         @Override
