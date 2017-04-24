@@ -20,6 +20,8 @@ public class AccessibilityService extends android.accessibilityservice.Accessibi
 
     long curTime, lastTime;
 
+    int lines;
+
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
 
@@ -30,6 +32,7 @@ public class AccessibilityService extends android.accessibilityservice.Accessibi
         if (nodesList.isEmpty() ||
                 (curTime - lastTime > 10000 && event.getEventType() != AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED)) {
             nodesList.clear();
+            lines = 0;
             getNodeInfoes(getRootInActiveWindow(), 0);
         }
 
@@ -59,7 +62,7 @@ public class AccessibilityService extends android.accessibilityservice.Accessibi
 
     void getNodeInfoes(AccessibilityNodeInfo node, int tab) {
 
-        if (node == null)
+        if (node == null || lines > 100)
             return;
 
         StringBuilder sb = new StringBuilder();
@@ -92,9 +95,14 @@ public class AccessibilityService extends android.accessibilityservice.Accessibi
             sb.append(" [Maybe icon: " + icon.width() + ", " + icon.height());
 
         Log.d(TAG, sb.toString());
+        lines ++;
 
         for (int i = 0; i < node.getChildCount(); i++) {
             AccessibilityNodeInfo child = node.getChild(i);
+
+            if(lines > 100)
+                return;
+
             getNodeInfoes(child, tab + 1);
         }
     }
