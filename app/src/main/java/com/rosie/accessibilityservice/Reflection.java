@@ -1,6 +1,7 @@
 package com.rosie.accessibilityservice;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import java.io.File;
@@ -15,7 +16,7 @@ import java.lang.reflect.Method;
 public class Reflection {
     private MyService service;
     private final static String TAG = "Reflection";
-    private Class mClass;
+    private Class<?> mClass;
 
     private final static String className = "android.view.SurfaceControl";
     private final static String methodName = "screenshot";
@@ -57,22 +58,27 @@ public class Reflection {
     void printMethod()  {
         try{
 
-            Method[] methods = mClass.getMethods();
-           // Method screenshot = mClass.getMethod(methodName, Integer.class, Integer.class);
-            Method screenshot = methods[23];
+          //  Method[] methods = mClass.getMethods();
+            Method screenshot = mClass.getMethod(methodName, int.class, int.class);
 
-            Bitmap bitmap = (Bitmap) screenshot.invoke(null, service.screenWidth, service.screenHeight);
-            Log.d(TAG, "Object created!");
-            saveFile(bitmap);
+          //  Method screenshot = methods[23];
+            Object result = screenshot.invoke(null, service.screenWidth, service.screenHeight);
+
+            if(result != null){
+                Log.d(TAG, result.getClass() + " Object created!");
+                saveFile(result);
+            }
+
 
         }catch(Exception e){
             e.printStackTrace();
         }
     }
-    void saveFile(Bitmap bitmap) throws FileNotFoundException {
+    void saveFile(Object result) throws FileNotFoundException {
 
         FileOutputStream fos = null;
         fos = new FileOutputStream(STORE_DIRECTORY + "/myscreen_" + IMAGES_PRODUCED + ".png");
+        Bitmap bitmap = (Bitmap) result;
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
 
 

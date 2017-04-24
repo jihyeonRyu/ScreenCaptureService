@@ -3,111 +3,21 @@
 
     <item
         is-multidex="true"
-        jar="/home/ryuji/.android/build-cache/f0d70252319e78324755721ee498d0dea6287d20/output/jars/classes.jar"
-        jumboMode="false"
+        jar="D:\AndroidProject\AccessibilityService\app\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
+        jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="518768f3200963fbfec652f498da2c9d39245234">
-        <dex dex="/home/ryuji/AndroidProject/AccessibilityService/app/build/intermediates/transforms/dex/h5dvr/folders/1000/10/classes_814566c32bed3586919006c037a01358a28692e0/classes.dex" />
+        sha1="510aa6efc159983dfbffa676a0dae37568c0a46f">
+        <dex dex="D:\AndroidProject\AccessibilityService\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run_07bdc049d9c95302e94f5040108cf7a466c04ca0\classes.dex" />
     </item>
     <item
         is-multidex="true"
-        jar="/home/ryuji/.android/build-cache/389faba50f7eec258e7de3ee632b3bcf7ab5ea45/output/jars/classes.jar"
-        jumboMode="false"
+        jar="D:\AndroidProject\AccessibilityService\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
+        jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="425c7b17887e5c3f8cbdf67ba171bc246f29b42c">
-        <dex dex="/home/ryuji/AndroidProject/AccessibilityService/app/build/intermediates/transforms/dex/h5dvr/folders/1000/10/classes_cfac8bb97a2cc1f28d7a5875812d686652a489e7/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/home/ryuji/.android/build-cache/5533fbc8fc78a87303d7042b783a8029dd811fa5/output/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.2"
-        sha1="70f23cb87278f89aa51e6f57e8f0fd5266572d95">
-        <dex dex="/home/ryuji/AndroidProject/AccessibilityService/app/build/intermediates/transforms/dex/h5dvr/folders/1000/10/classes_918d5d33483c4487108ba744281daf4a736377a9/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/home/ryuji/.android/build-cache/d180cef923f525508266ef61fa2d55ccb7bc69cb/output/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.2"
-        sha1="4b746ef0fd46acb5aaf3d9ab9a4cec22c28d3211">
-        <dex dex="/home/ryuji/AndroidProject/AccessibilityService/app/build/intermediates/transforms/dex/h5dvr/folders/1000/10/classes_fc677c98b50888521d68fcb89930af3a70f0bf26/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/home/ryuji/.android/build-cache/6d9ac9b8ce8ded7101dff8db4714d30db603d12a/output/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.2"
-        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
-        <dex dex="/home/ryuji/AndroidProject/AccessibilityService/app/build/intermediates/transforms/dex/h5dvr/folders/1000/10/classes_6f28aa4285e9926274ec18a49eba965e17f82fe0/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/home/ryuji/.android/build-cache/af20c0ef7638ee203c6bdcb95ad7ac7b03e40611/output/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.2"
-        sha1="d6a04527c17597019dad82777c5094a3d60d1c33">
-        <dex dex="/home/ryuji/AndroidProject/AccessibilityService/app/build/intermediates/transforms/dex/h5dvr/folders/1000/10/classes_3eea97dd0deb96bc638123a11f5659c6ca09240a/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/home/ryuji/.android/build-cache/8e0666c79ecbd7e8ee80417321d0074b9ba8dd56/output/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.2"
-        sha1="44ee06abb66da30f5855e6bf54574e64cdcd982a">
-        <dex dex="/home/ryuji/AndroidProject/AccessibilityService/app/build/intermediates/transforms/dex/h5dvr/folders/1000/10/classes_a7c10764972159c05f9e2f46dd62e521dc40ae4a/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/home/ryuji/.android/build-cache/642bca86e881f9c3c2a1fee4c9d1f806a9b7e61d/output/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.2"
-        sha1="5cc5ef8347a6bafa14556cbd35230aa9b3431bb0">
-        <dex dex="/home/ryuji/AndroidProject/AccessibilityService/app/build/intermediates/transforms/dex/h5dvr/folders/1000/10/classes_37592e288e43e558612a70a8cd1eb24b18ba01ca/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/home/ryuji/Android/Sdk/extras/android/m2repository/com/android/support/support-annotations/25.3.0/support-annotations-25.3.0.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.2"
-        sha1="dd84903d2e1af25a6081ef9038ad863cb14ca3a0">
-        <dex dex="/home/ryuji/AndroidProject/AccessibilityService/app/build/intermediates/transforms/dex/h5dvr/folders/1000/10/support-annotations-25.3.0_33fcfec1a2f729cb90c742b53b7b6857990f8441/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/home/ryuji/.android/build-cache/3c0302d66468a4783f0487ff32f56f520e1c9bf6/output/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.2"
-        sha1="93c10d68ab5ea070f15782ae6d3a28d1f1d8f45e">
-        <dex dex="/home/ryuji/AndroidProject/AccessibilityService/app/build/intermediates/transforms/dex/h5dvr/folders/1000/10/classes_d58fe063530b4280255b72904014ade53bd68ef4/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/home/ryuji/.android/build-cache/049d8d01877d0377fe994cb8416ea2c979a4e15e/output/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.2"
-        sha1="93c1199fcb0a34b980e6fff8350daff62e696ec2">
-        <dex dex="/home/ryuji/AndroidProject/AccessibilityService/app/build/intermediates/transforms/dex/h5dvr/folders/1000/10/classes_9376bc53ae0e7eee742e5c2824dd4d49a1fbe7d6/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/home/ryuji/Android/Sdk/extras/m2repository/com/android/support/constraint/constraint-layout-solver/1.0.2/constraint-layout-solver-1.0.2.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.2"
-        sha1="b9cd8fc6bd15cb915735d34535db30ece0c44603">
-        <dex dex="/home/ryuji/AndroidProject/AccessibilityService/app/build/intermediates/transforms/dex/h5dvr/folders/1000/10/constraint-layout-solver-1.0.2_76171c9e55a7a7f22172205b5ec58063b4cc49b0/classes.dex" />
+        sha1="ba8e7c132a2d25770bdc4ee407ad24be680e6bf9">
+        <dex dex="D:\AndroidProject\AccessibilityService\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run-bootstrap_d39ecbc89ce710be5942e33939e6027272b68149\classes.dex" />
     </item>
 
 </items>
