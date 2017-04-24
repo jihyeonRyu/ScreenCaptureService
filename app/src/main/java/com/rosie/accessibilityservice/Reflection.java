@@ -1,5 +1,7 @@
 package com.rosie.accessibilityservice;
 
+import android.util.Log;
+
 import java.lang.reflect.Method;
 
 /**
@@ -10,6 +12,7 @@ public class Reflection {
     private MyService service;
     private final static String TAG = "Reflection";
     private Class mClass;
+
     private final static String className = "android.view.SurfaceControl";
     private final static String methodName = "screenshot";
 
@@ -27,6 +30,7 @@ public class Reflection {
 
             Method screenshot = mClass.getMethod(methodName, Integer.class, Integer.class);
             Object bitmap = screenshot.invoke(null, service.screenWidth, service.screenHeight);
+            Log.d(TAG, "Object created!");
 
         }catch(Exception e){
             e.printStackTrace();

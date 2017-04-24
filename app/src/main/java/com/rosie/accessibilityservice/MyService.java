@@ -26,6 +26,8 @@ public class MyService extends AccessibilityService {
     int screenWidth;
     int screenHeight;
 
+    List<Rect> iconRect = new ArrayList<>();
+
     Reflection reflection;
 
     @Override
@@ -42,6 +44,7 @@ public class MyService extends AccessibilityService {
             reflection = new Reflection(this);
             reflection.printMethod();
 
+            iconRect.clear();
             latestTexts.clear();
             lines = 0;
             getNodeInfoes(getRootInActiveWindow(), 0);
@@ -111,6 +114,9 @@ public class MyService extends AccessibilityService {
         Rect rect = new Rect();
         node.getBoundsInScreen(rect);
         sb.append(node.getPackageName() + "==" + node.getClassName() + rect);
+
+        if(rect.width() == rect.height() && node.isClickable() && (node.getText() == null || node.getText().length() <= 0))
+            iconRect.add(rect);
 
         if (node.isScrollable() || node.getClassName().toString().contains("ScrollView")) {
             sb.append(" <Scrollable> ");
