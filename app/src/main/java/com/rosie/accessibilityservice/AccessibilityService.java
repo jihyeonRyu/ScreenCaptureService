@@ -16,25 +16,25 @@ public class AccessibilityService extends android.accessibilityservice.Accessibi
 
     final static String TAG = "AccessibilityService";
 
-    private List<AccessibilityNodeInfo> nodesList = new ArrayList<>();
+    int lines;
 
-    long curTime, lastTime;
+    List<String> latestTexts = new ArrayList<>();
+    List<String> nextTexts = new ArrayList<>();
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
 
         Log.d(TAG, "on AccessibilityEvent");
 
-        curTime = System.currentTimeMillis();
+        nextTexts.clear();
+        getNextTexts(getRootInActiveWindow());
 
-        if (nodesList.isEmpty() ||
-                (curTime - lastTime > 10000 && event.getEventType() != AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED)) {
-            nodesList.clear();
+        if (isTextChanged(latestTexts, nextTexts))
+        {
+            latestTexts.clear();
+            lines = 0;
             getNodeInfoes(getRootInActiveWindow(), 0);
         }
-
-        lastTime = System.currentTimeMillis();
-
     }
 
     @Override
@@ -42,9 +42,8 @@ public class AccessibilityService extends android.accessibilityservice.Accessibi
         Log.e(TAG, "OnInterrupt");
     }
 
-    @Override
-
     // 접근성 권한 설정 시
+    @Override
     public void onServiceConnected() {
         Log.d(TAG, "on Service Connected");
 
@@ -57,9 +56,35 @@ public class AccessibilityService extends android.accessibilityservice.Accessibi
         setServiceInfo(info);
     }
 
+    void getNextTexts(AccessibilityNodeInfo node){
+
+        if(node.getText() != null && node.getText().length() > 0 )
+            nextTexts.add(node.getText().toString());
+
+        for ( int i = 0 ; i < node.getChildCount() ; i ++){
+
+            AccessibilityNodeInfo child = node.getChild(i);
+            if(child == null)
+                continue;
+            getNextTexts(child);
+        }
+    }
+
+    boolean isTextChanged(List<String> latestTexts, List<String> nextTexts){
+
+        if(nextTexts.size() <= 0 || latestTexts.size() <= 0 )
+            return true;
+        for(int i = 0 ; i < latestTexts.size() ; i ++){
+
+            if(!latestTexts.get(i).equals(nextTexts.get(i)))
+                return true;
+        }
+        return false;
+    }
+
     void getNodeInfoes(AccessibilityNodeInfo node, int tab) {
 
-        if (node == null)
+        if (node == null || lines > 100)
             return;
 
         StringBuilder sb = new StringBuilder();
@@ -80,8 +105,11 @@ public class AccessibilityService extends android.accessibilityservice.Accessibi
             sb.append(" [Clickable] ");
         }
 
-        if (node.getText() != null && node.getText().length() > 0)
+        if (node.getText() != null && node.getText().length() > 0){
             sb.append(" [Text: " + node.getText() + " ]");
+
+            latestTexts.add(node.getText().toString());
+        }
 
         if (node.getContentDescription() != null && node.getContentDescription().length() > 0) {
             sb.append(" [Description: " + node.getContentDescription() + " ]");
@@ -92,9 +120,12 @@ public class AccessibilityService extends android.accessibilityservice.Accessibi
             sb.append(" [Maybe icon: " + icon.width() + ", " + icon.height());
 
         Log.d(TAG, sb.toString());
+        lines ++;
 
         for (int i = 0; i < node.getChildCount(); i++) {
             AccessibilityNodeInfo child = node.getChild(i);
+            if(lines>100)
+                return;
             getNodeInfoes(child, tab + 1);
         }
     }
