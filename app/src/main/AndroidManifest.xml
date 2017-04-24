@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.rosie.accessibilityservice" >
+    package="com.rosie.accessibilityservice"
+    android:sharedUserId="android.uid.system">
+
+    <uses-permission android:name="android.permission.READ_FRAME_BUFFER" />
+    <uses-permission android:name="android.permission.INJECT_EVENTS" />
 
 
     <application
