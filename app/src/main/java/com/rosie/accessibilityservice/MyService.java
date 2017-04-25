@@ -42,7 +42,7 @@ public class MyService extends AccessibilityService {
 
         {
             reflection = new Reflection(this);
-            reflection.printMethod();
+            reflection.callMethod();
 
             iconRect.clear();
             latestTexts.clear();
@@ -115,6 +115,7 @@ public class MyService extends AccessibilityService {
         node.getBoundsInScreen(rect);
         sb.append(node.getPackageName() + "==" + node.getClassName() + rect);
 
+        // 아이콘 일 것 같은 node의 Rect 받아오기
         if(rect.width() == rect.height() && node.isClickable() && (node.getText() == null || node.getText().length() <= 0))
             iconRect.add(rect);
 

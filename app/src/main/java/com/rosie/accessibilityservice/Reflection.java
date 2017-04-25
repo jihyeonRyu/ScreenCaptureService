@@ -1,13 +1,17 @@
 package com.rosie.accessibilityservice;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.Rect;
 import android.util.Log;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+
+import static android.view.Surface.ROTATION_0;
 
 /**
  * Created by ryuji on 2017-04-24.
@@ -23,17 +27,42 @@ public class Reflection {
 
     private static String STORE_DIRECTORY;
     private static int IMAGES_PRODUCED = 0;
+    private List<Rect> iconRect = new ArrayList<>();
+    private List<Bitmap> icons = new ArrayList<>();
+
 
     Reflection(MyService service){
         this.service = service;
+        this.iconRect = service.iconRect;
+        icons.clear();
 
         try {
             mClass = Class.forName(className);
-            createDirectory();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
+
+    void callMethod()  {
+        try{
+
+            Method cropshot = mClass.getMethod(methodName, Rect.class, int.class, int.class, int.class, int.class, boolean.class, int.class);
+            if(iconRect.size() == 0) {
+                Log.d(TAG, "There is no icon Rect");
+                return;
+            }
+
+            for(int i = 0; i < iconRect.size() ; i ++ ) {
+                Bitmap result = (Bitmap) cropshot.invoke(null, iconRect.get(i), iconRect.get(i).width(), iconRect.get(i).height(), 0, 1000000, false, ROTATION_0);
+                icons.add(result);
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
+    ////////////////////////// save bitmap image ////////////////////////////////
 
     private void createDirectory (){
 
@@ -54,38 +83,15 @@ public class Reflection {
         }
     }
 
-
-    void printMethod()  {
-        try{
-
-          //  Method[] methods = mClass.getMethods();
-            Method screenshot = mClass.getMethod(methodName, int.class, int.class);
-
-          //  Method screenshot = methods[23];
-            Object result = screenshot.invoke(null, service.screenWidth, service.screenHeight);
-
-            if(result != null){
-                Log.d(TAG, result.getClass() + " Object created!");
-                saveFile(result);
-            }
-
-
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-    }
-    void saveFile(Object result) throws FileNotFoundException {
+    void saveFile(Bitmap result) throws FileNotFoundException {
 
         FileOutputStream fos = null;
         fos = new FileOutputStream(STORE_DIRECTORY + "/myscreen_" + IMAGES_PRODUCED + ".png");
-        Bitmap bitmap = (Bitmap) result;
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
-
+        result.compress(Bitmap.CompressFormat.PNG, 100, fos);
 
         IMAGES_PRODUCED++;
         Log.d(TAG, "captured image: " + IMAGES_PRODUCED);
 
     }
-
 
 }
