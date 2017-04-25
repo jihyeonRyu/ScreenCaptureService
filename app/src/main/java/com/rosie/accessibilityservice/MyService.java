@@ -17,8 +17,6 @@ import java.util.List;
 public class MyService extends AccessibilityService {
 
     final static String TAG = "MyService";
-
-    final static double PERCENT = 0.3;
     int lines;
 
     List<String> latestTexts = new ArrayList<>();
@@ -27,7 +25,7 @@ public class MyService extends AccessibilityService {
     int screenWidth;
     int screenHeight;
 
-    List<Rect> iconRect = new ArrayList<>();
+    List<AccessibilityNodeInfo> icons = new ArrayList<>();
 
     Reflection reflection;
 
@@ -45,7 +43,7 @@ public class MyService extends AccessibilityService {
             reflection = new Reflection(this);
             reflection.callMethod();
 
-            iconRect.clear();
+            icons.clear();
             latestTexts.clear();
             lines = 0;
             getNodeInfoes(getRootInActiveWindow(), 0);
@@ -136,7 +134,7 @@ public class MyService extends AccessibilityService {
          if ( (rect.width() < (screenWidth*0.3) && rect.height() < (screenHeight*0.3))
                 && node.isClickable() && ( node.getText() == null || node.getText().length() < 2)){
             sb.append(" <Maybe icon> ");
-            iconRect.add(rect);
+             icons.add(node);
         }
 
         Log.d(TAG, sb.toString());

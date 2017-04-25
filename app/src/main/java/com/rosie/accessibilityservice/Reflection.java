@@ -3,6 +3,7 @@ package com.rosie.accessibilityservice;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.util.Log;
+import android.view.accessibility.AccessibilityNodeInfo;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -27,15 +28,15 @@ public class Reflection {
 
     private static String STORE_DIRECTORY;
     private static int IMAGES_PRODUCED = 0;
-    private List<Rect> iconRect = new ArrayList<>();
-    private List<Bitmap> icons = new ArrayList<>();
+    private List<AccessibilityNodeInfo> icons = new ArrayList<>();
+    private List<Bitmap> iconBitmaps = new ArrayList<>();
 
 
     Reflection(MyService service){
-        this.service = service;
-        this.iconRect = service.iconRect;
+        iconBitmaps.clear();
         icons.clear();
-
+        this.service = service;
+        this.icons = service.icons;
         try {
             mClass = Class.forName(className);
         } catch (ClassNotFoundException e) {
@@ -47,15 +48,16 @@ public class Reflection {
         try{
             createDirectory();
             Method cropshot = mClass.getMethod(methodName, Rect.class, int.class, int.class, int.class, int.class, boolean.class, int.class);
-            if(iconRect.size() == 0) {
+            if(icons.size() == 0) {
                 Log.d(TAG, "There is no icon Rect");
                 return;
             }
-
-            for(int i = 0; i < iconRect.size() ; i ++ ) {
-                Bitmap result = (Bitmap) cropshot.invoke(null, iconRect.get(i), iconRect.get(i).width(), iconRect.get(i).height(), 0, 1000000, false, ROTATION_0);
+            for(int i = 0; i < icons.size() ; i ++ ) {
+                Rect rect = new Rect();
+                icons.get(i).getBoundsInScreen(rect);
+                Bitmap result = (Bitmap) cropshot.invoke(null, rect, rect.width(), rect.height(), 0, 1000000, false, ROTATION_0);
                 if(result != null){
-                    icons.add(result);
+                    iconBitmaps.add(result);
                     saveFile(result);
                 }
             }
