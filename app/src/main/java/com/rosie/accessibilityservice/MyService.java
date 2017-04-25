@@ -18,6 +18,7 @@ public class MyService extends AccessibilityService {
 
     final static String TAG = "MyService";
 
+    final static double PERCENT = 0.3;
     int lines;
 
     List<String> latestTexts = new ArrayList<>();
@@ -115,10 +116,6 @@ public class MyService extends AccessibilityService {
         node.getBoundsInScreen(rect);
         sb.append(node.getPackageName() + "==" + node.getClassName() + rect);
 
-        // 아이콘 일 것 같은 node의 Rect 받아오기
-        if(rect.width() == rect.height() && node.isClickable() && (node.getText() == null || node.getText().length() <= 0))
-            iconRect.add(rect);
-
         if (node.isScrollable() || node.getClassName().toString().contains("ScrollView")) {
             sb.append(" <Scrollable> ");
         }
@@ -136,10 +133,11 @@ public class MyService extends AccessibilityService {
         if (node.getContentDescription() != null && node.getContentDescription().length() > 0) {
             sb.append(" [Description: " + node.getContentDescription() + " ]");
         }
-        Rect icon = new Rect();
-        node.getBoundsInScreen(icon);
-        if (icon.width() == icon.height())
-            sb.append(" [Maybe icon: " + icon.width() + ", " + icon.height());
+         if ( (rect.width() < (screenWidth*0.3) && rect.height() < (screenHeight*0.3))
+                && node.isClickable() && ( node.getText() == null || node.getText().length() < 2)){
+            sb.append(" <Maybe icon> ");
+            iconRect.add(rect);
+        }
 
         Log.d(TAG, sb.toString());
         lines ++;
