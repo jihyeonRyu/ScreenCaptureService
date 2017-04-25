@@ -45,7 +45,7 @@ public class Reflection {
 
     void callMethod()  {
         try{
-
+            createDirectory();
             Method cropshot = mClass.getMethod(methodName, Rect.class, int.class, int.class, int.class, int.class, boolean.class, int.class);
             if(iconRect.size() == 0) {
                 Log.d(TAG, "There is no icon Rect");
@@ -54,7 +54,10 @@ public class Reflection {
 
             for(int i = 0; i < iconRect.size() ; i ++ ) {
                 Bitmap result = (Bitmap) cropshot.invoke(null, iconRect.get(i), iconRect.get(i).width(), iconRect.get(i).height(), 0, 1000000, false, ROTATION_0);
-                icons.add(result);
+                if(result != null){
+                    icons.add(result);
+                    saveFile(result);
+                }
             }
         }catch(Exception e){
             e.printStackTrace();
