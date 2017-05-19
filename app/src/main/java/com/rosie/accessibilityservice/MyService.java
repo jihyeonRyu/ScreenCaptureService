@@ -155,14 +155,18 @@ public class MyService extends AccessibilityService {
 
     void getIcons(AccessibilityNodeInfo node){
 
+        if(node == null){
+            return;
+        }
+
         Rect rect = new Rect();
         node.getBoundsInScreen(rect);
 
         if ( rect.width() < ( screenWidth*0.1 ) /* maybe small size */
                 && rect.width() < (screenHeight*0.1)
                 && node.isClickable() /* must clickable */
-                && ( node.getText() == null || node.getText().length() < 2)  /* no text or just number exist */
-                && (node.getContentDescription() == null || node.getContentDescription().length() < 2) /* already recognized at previous process */
+                && ( node.getText() == null || node.getText().length() < 2)
+                && ( node.getContentDescription() == null || node.getContentDescription().length() < 2) /* no text or just number exist */
                 && node.getChildCount() <= 1
                 && !node.isCheckable()
                 && node.isVisibleToUser()){
@@ -171,6 +175,8 @@ public class MyService extends AccessibilityService {
 
         for (int i = 0; i < node.getChildCount(); i++) {
             AccessibilityNodeInfo child = node.getChild(i);
+            if(child == null)
+                continue;
             getIcons(child);
         }
 
