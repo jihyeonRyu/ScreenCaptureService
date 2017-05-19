@@ -47,7 +47,7 @@ public class MyService extends AccessibilityService {
                 @Override
                 public void run() {
                     try {
-                        Thread.sleep(300);
+                        Thread.sleep(500);
                         getIcons(getRootInActiveWindow());
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -165,7 +165,7 @@ public class MyService extends AccessibilityService {
                 && (node.getContentDescription() == null || node.getContentDescription().length() < 2) /* already recognized at previous process */
                 && node.getChildCount() <= 1
                 && !node.isCheckable()
-                && node.isVisibleToUser()) /* no child */{
+                && node.isVisibleToUser()){
             reflection.callMethod(node);
         }
 
