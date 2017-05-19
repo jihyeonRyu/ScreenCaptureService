@@ -19,48 +19,46 @@ import static android.view.Surface.ROTATION_0;
  */
 
 public class Reflection {
-    private MyService service;
+
     private final static String TAG = "Reflection";
     private Class<?> mClass;
-
+    private MyService service;
     private final static String className = "android.view.SurfaceControl";
     private final static String methodName = "screenshot";
 
     private static String STORE_DIRECTORY;
-    private static int IMAGES_PRODUCED = 0;
-    private List<AccessibilityNodeInfo> icons = new ArrayList<>();
-    private List<Bitmap> iconBitmaps = new ArrayList<>();
-
 
     Reflection(MyService service){
-        iconBitmaps.clear();
-        icons.clear();
+
         this.service = service;
-        this.icons = service.icons;
+
         try {
             mClass = Class.forName(className);
+            createDirectory();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
 
-    void callMethod()  {
+    void callMethod(AccessibilityNodeInfo node)  {
         try{
-            createDirectory();
+
             Method cropshot = mClass.getMethod(methodName, Rect.class, int.class, int.class, int.class, int.class, boolean.class, int.class);
-            if(icons.size() == 0) {
-                Log.d(TAG, "There is no icon Rect");
+
+            if(node == null) {
+                Log.d(TAG, "null icon");
                 return;
             }
-            for(int i = 0; i < icons.size() ; i ++ ) {
-                Rect rect = new Rect();
-                icons.get(i).getBoundsInScreen(rect);
-                Bitmap result = (Bitmap) cropshot.invoke(null, rect, rect.width(), rect.height(), 0, 1000000, false, ROTATION_0);
-                if(result != null){
-                    iconBitmaps.add(result);
-                    saveFile(result);
-                }
+
+            Rect rect = new Rect();
+            node.getBoundsInScreen(rect);
+            Log.d("TAG", "icon[ " + node.getClassName() + "]  " + rect.width() + " : " + rect.height());
+            Bitmap result = (Bitmap) cropshot.invoke(null, rect, rect.width(), rect.height(), 0, 1000000, false, ROTATION_0);
+
+            if(result != null){
+                saveFile(result);
             }
+
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -91,11 +89,10 @@ public class Reflection {
     void saveFile(Bitmap result) throws FileNotFoundException {
 
         FileOutputStream fos = null;
-        fos = new FileOutputStream(STORE_DIRECTORY + "/myscreen_" + IMAGES_PRODUCED + ".png");
+        long num = System.currentTimeMillis();
+        fos = new FileOutputStream(STORE_DIRECTORY + "/myscreen_" + num + ".png");
         result.compress(Bitmap.CompressFormat.PNG, 100, fos);
-
-        IMAGES_PRODUCED++;
-        Log.d(TAG, "captured image: " + IMAGES_PRODUCED);
+        Log.d(TAG, "captured image: " + num);
 
     }
 
