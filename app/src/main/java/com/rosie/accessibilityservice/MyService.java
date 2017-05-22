@@ -47,7 +47,7 @@ public class MyService extends AccessibilityService {
                 @Override
                 public void run() {
                     try {
-                        Thread.sleep(500);
+                        Thread.sleep(600);
                         getIcons(getRootInActiveWindow());
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -153,33 +153,37 @@ public class MyService extends AccessibilityService {
         }
     }
 
-    void getIcons(AccessibilityNodeInfo node){
+    void getIcons(AccessibilityNodeInfo node) {
+        try {
+            if (node == null) {
+                return;
+            }
 
-        if(node == null){
-            return;
+            Rect rect = new Rect();
+            node.getBoundsInScreen(rect);
+
+            if (rect.width() < (screenWidth * 0.1) /* maybe small size */
+                    && rect.width() < (screenHeight * 0.1)
+                    && node.isClickable() /* must clickable */
+                    && (node.getText() == null || node.getText().length() < 2)
+                    && (node.getContentDescription() == null || node.getContentDescription().length() > 10 || node.getContentDescription().length() < 2) /* no description or too many */
+                    && node.getChildCount() <= 1
+                    && !node.isCheckable() /* check box */
+                    && !node.isEditable() /* Edit Text box */
+                    && node.isVisibleToUser()) {
+                reflection.callMethod(node);
+            }
+
+            for (int i = 0; i < node.getChildCount(); i++) {
+                AccessibilityNodeInfo child = node.getChild(i);
+                if (child == null)
+                    continue;
+                getIcons(child);
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        Rect rect = new Rect();
-        node.getBoundsInScreen(rect);
-
-        if ( rect.width() < ( screenWidth*0.1 ) /* maybe small size */
-                && rect.width() < (screenHeight*0.1)
-                && node.isClickable() /* must clickable */
-                && ( node.getText() == null || node.getText().length() < 2)
-                && ( node.getContentDescription() == null || node.getContentDescription().length() < 2) /* no text or just number exist */
-                && node.getChildCount() <= 1
-                && !node.isCheckable()
-                && node.isVisibleToUser()){
-
-            reflection.callMethod(node);
-        }
-
-        for (int i = 0; i < node.getChildCount(); i++) {
-            AccessibilityNodeInfo child = node.getChild(i);
-            if(child == null)
-                continue;
-            getIcons(child);
-        }
-
     }
 }
