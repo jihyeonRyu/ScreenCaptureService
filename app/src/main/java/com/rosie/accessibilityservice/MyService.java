@@ -170,6 +170,7 @@ public class MyService extends AccessibilityService {
                 && node.getChildCount() <= 1
                 && !node.isCheckable()
                 && node.isVisibleToUser()){
+
             reflection.callMethod(node);
         }
 
